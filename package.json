@@ -9,15 +9,31 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^6.8.2",
+    "bcryptjs": "^3.0.2",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.12.2",
+    "geoip-lite": "^1.4.10",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.511.0",
+    "next": "15.3.2",
+    "openai": "^4.103.0",
+    "prisma": "^6.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.2"
+    "react-hook-form": "^7.56.4",
+    "react-hot-toast": "^2.5.2",
+    "react-select": "^5.10.1",
+    "recharts": "^2.15.3",
+    "tailwind-merge": "^3.3.0",
+    "ua-parser-js": "^2.0.3"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4"
   }
 }
