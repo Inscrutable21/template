@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=4096 --no-warnings\" next build",
+    "dev": "prisma generate && next dev",
+    "build": "prisma generate && cross-env NODE_OPTIONS=\"--max-old-space-size=4096 --no-warnings\" next build",
     "start": "next start",
     "lint": "next lint",
     "build:safe": "node scripts/build.js",
-    "build:isolated": "node scripts/isolated-build.js"
+    "build:isolated": "node scripts/isolated-build.js",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",

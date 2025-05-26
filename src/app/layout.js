@@ -15,7 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "MyApp - Location Tracking Made Simple",
   description: "A simple application with user authentication and location tracking",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({ children }) {
@@ -29,8 +34,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-
-
-
-
-
