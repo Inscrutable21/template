@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=4096 --no-warnings\" next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:safe": "node scripts/build.js",
+    "build:isolated": "node scripts/isolated-build.js"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
@@ -32,8 +34,10 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "tailwindcss": "^4"
   }
 }
+

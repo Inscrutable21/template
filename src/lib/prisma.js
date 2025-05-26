@@ -1,18 +1,13 @@
 import { PrismaClient } from '@/generated/prisma';
 
-// Create a single PrismaClient instance and reuse it
-let prisma;
+// PrismaClient is attached to the `global` object in development to prevent
+// exhausting your database connection limit.
+const globalForPrisma = global;
 
-if (process.env.NODE_ENV === 'production') {
-  prisma = new PrismaClient();
-} else {
-  // Prevent multiple instances during development
-  if (!global.prisma) {
-    global.prisma = new PrismaClient({
-      log: ['query', 'error', 'warn'],
-    });
-  }
-  prisma = global.prisma;
-}
+const prisma = globalForPrisma.prisma || new PrismaClient({
+  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+});
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 export default prisma;

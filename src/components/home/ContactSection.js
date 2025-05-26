@@ -5,7 +5,7 @@ export default function ContactSection() {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold">Get In Touch</h2>
           <p className="mt-4 text-xl text-foreground/70 max-w-3xl mx-auto">
-            Have questions or need assistance? We're here to help.
+            Have questions or need assistance? We&apos;re here to help.
           </p>
         </div>
 
@@ -128,3 +128,4 @@ export default function ContactSection() {
     </section>
   );
 }
+
