@@ -1,51 +1,61 @@
+import { useRatioPrioritization } from '@/hooks/useRatioPrioritization';
+
 export default function TestimonialsSection() {
-  const testimonials = [
+  const initialTestimonials = [
     {
-      quote: "This app has completely changed how I track my location data. It's intuitive and powerful!",
-      author: "Sarah Johnson",
+      id: "testimonial-1",
+      name: "Sarah Johnson",
       role: "Marketing Director",
-      initial: "S"
+      company: "TechCorp",
+      content: "This app has completely transformed how we track our field team. The real-time updates are a game changer!",
+      avatar: "/avatars/sarah.jpg"
     },
     {
-      quote: "I've tried many location tracking apps, but this one stands out for its simplicity and effectiveness.",
-      author: "Michael Chen",
-      role: "Software Engineer",
-      initial: "M"
+      id: "testimonial-2",
+      name: "Michael Chen",
+      role: "Operations Manager",
+      company: "Logistics Pro",
+      content: "The analytics dashboard gives me insights I never had before. I can make better decisions faster.",
+      avatar: "/avatars/michael.jpg"
     },
     {
-      quote: "The security features give me peace of mind knowing my location data is protected.",
-      author: "Emma Rodriguez",
-      role: "Travel Blogger",
-      initial: "E"
+      id: "testimonial-3",
+      name: "Jessica Williams",
+      role: "Small Business Owner",
+      company: "Urban Delivery",
+      content: "Setup was incredibly easy and my delivery team was up and running in minutes. Customer support is excellent too!",
+      avatar: "/avatars/jessica.jpg"
     }
   ];
+  
+  // Use the ratio prioritization hook with a 5% threshold
+  const { prioritizedItems: testimonials, recordInteraction } = useRatioPrioritization(
+    initialTestimonials, 
+    'testimonial', 
+    0.05, 
+    [] // No fixed testimonials
+  );
 
   return (
-    <section id="testimonials" className="py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold">What Our Users Say</h2>
-          <p className="mt-4 text-xl text-foreground/70 max-w-3xl mx-auto">
-            Don't just take our word for it - hear from some of our satisfied users.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
+    <section id="testimonials" className="py-16 bg-foreground/5">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-12">What Our Users Say</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {testimonials.map((testimonial) => (
             <div 
-              key={index} 
-              className="p-6 bg-foreground/5 rounded-lg border border-foreground/10"
+              key={testimonial.id}
+              className="bg-background p-6 rounded-lg shadow-md"
+              data-analytics-id={testimonial.id}
+              onClick={() => recordInteraction(testimonial.id)}
             >
               <div className="flex items-center mb-4">
-                <div className="mr-4 w-12 h-12 rounded-full bg-gradient-to-br from-foreground/20 to-foreground/10 flex items-center justify-center text-lg font-medium">
-                  {testimonial.initial}
-                </div>
+                <div className="w-12 h-12 rounded-full bg-foreground/10 mr-4"></div>
                 <div>
-                  <h4 className="font-semibold">{testimonial.author}</h4>
-                  <p className="text-sm text-foreground/70">{testimonial.role}</p>
+                  <h3 className="font-semibold">{testimonial.name}</h3>
+                  <p className="text-sm text-foreground/70">{testimonial.role}, {testimonial.company}</p>
                 </div>
               </div>
-              <p className="italic text-foreground/80">"{testimonial.quote}"</p>
+              <p className="italic">{testimonial.content}</p>
             </div>
           ))}
         </div>

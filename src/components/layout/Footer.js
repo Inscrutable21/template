@@ -1,10 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
+import { usePersonalization } from '@/hooks/usePersonalization';
+import { useState, useEffect } from 'react';
 
 export default function Footer() {
-  const { user, loading } = useAuth();
-  
-  const footerLinks = [
+  const { user } = useAuth();
+  const { recommendations } = usePersonalization();
+  const [footerLinks, setFooterLinks] = useState([
     {
       title: "Product",
       links: [
@@ -32,7 +36,49 @@ export default function Footer() {
         { name: "Terms of Service", href: "/terms" }
       ]
     }
-  ];
+  ]);
+
+  // Silently reorder footer links based on user interactions
+  useEffect(() => {
+    if (!recommendations?.topSections || !recommendations.topSections.length) {
+      return;
+    }
+    
+    // Create a map to track which links were interacted with
+    const interactionMap = new Map();
+    
+    recommendations.topSections.forEach((section, index) => {
+      // Check if this interaction was with a footer link
+      footerLinks.forEach(category => {
+        category.links.forEach(link => {
+          // Check if the link path matches the interaction
+          const linkPath = link.href.split('#')[0] || '/';
+          const sectionPath = section.path.split('#')[0] || '/';
+          
+          if (linkPath === sectionPath || 
+              section.text?.toLowerCase().includes(link.name.toLowerCase())) {
+            interactionMap.set(link.name, 10 - index); // Higher priority for more interactions
+          }
+        });
+      });
+    });
+    
+    // Reorder links within each category based on interactions
+    const updatedFooterLinks = footerLinks.map(category => {
+      const sortedLinks = [...category.links].sort((a, b) => {
+        const priorityA = interactionMap.get(a.name) || 0;
+        const priorityB = interactionMap.get(b.name) || 0;
+        return priorityB - priorityA;
+      });
+      
+      return {
+        ...category,
+        links: sortedLinks
+      };
+    });
+    
+    setFooterLinks(updatedFooterLinks);
+  }, [recommendations]);
 
   return (
     <footer className="bg-foreground/5 border-t border-foreground/10 mt-auto">
@@ -47,9 +93,25 @@ export default function Footer() {
               A simple application with user authentication and location tracking.
               Sign up today to get started with our powerful features and secure platform.
             </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-4">
-              <AuthCTA />
-            </div>
+            
+            {!user && (
+              <div className="mt-6 flex flex-col sm:flex-row gap-4">
+                <Link 
+                  href="/signup" 
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-md bg-foreground text-background hover:bg-foreground/90 transition-colors"
+                  data-analytics-id="footer-signup-link"
+                >
+                  Get Started
+                </Link>
+                <Link 
+                  href="/login" 
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-md border border-foreground/20 hover:bg-foreground/5 transition-colors"
+                  data-analytics-id="footer-login-link"
+                >
+                  Log In
+                </Link>
+              </div>
+            )}
             
             <div className="mt-8">
               <p className="text-sm font-medium mb-3">Follow us</p>
@@ -79,7 +141,11 @@ export default function Footer() {
               <ul className="mt-4 space-y-3">
                 {column.links.map((link, linkIdx) => (
                   <li key={linkIdx}>
-                    <Link href={link.href} className="text-base text-foreground/70 hover:text-foreground transition-colors">
+                    <Link 
+                      href={link.href} 
+                      className="text-base text-foreground/70 hover:text-foreground transition-colors"
+                      data-analytics-id={`footer-${column.title.toLowerCase()}-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                    >
                       {link.name}
                     </Link>
                   </li>
@@ -126,6 +192,7 @@ function AuthCTA() {
       <Link 
         href="/dashboard" 
         className="inline-flex items-center justify-center px-5 py-2.5 rounded-md bg-foreground text-background hover:bg-foreground/90 transition-colors"
+        data-analytics-id="footer-dashboard-link"
       >
         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -140,6 +207,7 @@ function AuthCTA() {
       <Link 
         href="/signup" 
         className="inline-flex items-center justify-center px-5 py-2.5 rounded-md bg-foreground text-background hover:bg-foreground/90 transition-colors"
+        data-analytics-id="footer-signup-link"
       >
         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -149,6 +217,7 @@ function AuthCTA() {
       <Link 
         href="/login" 
         className="inline-flex items-center justify-center px-5 py-2.5 rounded-md border border-foreground/20 hover:bg-foreground/5 transition-colors"
+        data-analytics-id="footer-login-link"
       >
         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />

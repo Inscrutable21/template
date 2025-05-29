@@ -155,6 +155,10 @@ export default function Dashboard() {
                   <p className="font-medium">Settings</p>
                   <p className="text-xs text-foreground/60">Manage account</p>
                 </button>
+                <Link href="/analytics-dashboard" className="p-3 bg-background rounded-md border border-foreground/10 hover:border-foreground/20 transition-colors text-left">
+                  <p className="font-medium">Analytics</p>
+                  <p className="text-xs text-foreground/60">View site analytics</p>
+                </Link>
               </div>
             </div>
           </div>

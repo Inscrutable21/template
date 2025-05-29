@@ -14,13 +14,58 @@ datasource db {
 }
 
 model User {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String         @unique
+  password     String
+  city         String
+  state        String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  pageViews    PageView[]
+  webVitals    WebVital[]
+  heatmapEvents HeatmapEvent[]
+}
+
+model PageView {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String   @unique
-  password  String
-  city      String
-  state     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  path      String
+  userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  userAgent String?
+  ipAddress String?
+  timestamp DateTime @default(now())
+}
+
+model WebVital {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   // FCP, LCP, CLS, FID, etc.
+  value     Float
+  path      String
+  userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  userAgent String?
+  timestamp DateTime @default(now())
+}
+
+model HeatmapEvent {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  x               Int
+  y               Int
+  path            String
+  eventType       String   // click, mousemove, scroll
+  userId          String?  @db.ObjectId
+  user            User?    @relation(fields: [userId], references: [id])
+  userAgent       String?
+  elementInfo     String?  // JSON string with element details
+  scrollPercentage Int?    // Scroll percentage (0-100)
+  milestone       String?  // Scroll milestone (25%, 50%, 75%, 100%)
+  visibleSections String?  // Comma-separated list of visible sections
+  timeOnPage      Int?     // Time spent on page in seconds
+  timestamp       DateTime @default(now())
+
+  // Add indexes for faster queries
+  @@index([path, eventType])
+  @@index([userId])
 }
 
