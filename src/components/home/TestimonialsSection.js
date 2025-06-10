@@ -1,4 +1,4 @@
-import { useRatioPrioritization } from '@/hooks/useRatioPrioritization';
+import { usePersonalization } from '@/hooks/usePersonalization';
 
 export default function TestimonialsSection() {
   const initialTestimonials = [
@@ -28,14 +28,25 @@ export default function TestimonialsSection() {
     }
   ];
   
-  // Use the ratio prioritization hook with a 5% threshold
-  const { prioritizedItems: testimonials, recordInteraction } = useRatioPrioritization(
-    initialTestimonials, 
-    'testimonial', 
-    0.05, 
-    [] // No fixed testimonials
-  );
-
+  // Replace this code
+  // const { prioritizedItems: testimonials, recordInteraction } = useRatioPrioritization(
+  //   initialTestimonials, 
+  //   'testimonial', 
+  //   0.05, 
+  //   [] // No fixed testimonials
+  // );
+  
+  // With this code
+  const { recommendations } = usePersonalization();
+  
+  // Use all testimonials by default
+  const testimonials = initialTestimonials;
+  
+  // Function to record interaction
+  const recordInteraction = (id) => {
+    console.log(`Interaction with testimonial: ${id}`);
+  };
+  
   return (
     <section id="testimonials" className="py-16 bg-foreground/5">
       <div className="container mx-auto px-4">

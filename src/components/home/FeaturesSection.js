@@ -1,4 +1,4 @@
-import { useRatioPrioritization } from '@/hooks/useRatioPrioritization';
+import { usePersonalization } from '@/hooks/usePersonalization';
 
 export default function FeaturesSection() {
   const initialFeatures = [
@@ -40,14 +40,18 @@ export default function FeaturesSection() {
     }
   ];
   
-  // Use the ratio prioritization hook with a 5% threshold
-  const { prioritizedItems: features, recordInteraction } = useRatioPrioritization(
-    initialFeatures, 
-    'feature', 
-    0.05, 
-    [] // No fixed features in this section
-  );
-
+  // Replace the useRatioPrioritization hook with usePersonalization
+  const { recommendations } = usePersonalization();
+  
+  // Use all features by default
+  const features = initialFeatures;
+  
+  // Function to record interaction (can be empty or implement analytics)
+  const recordInteraction = (id) => {
+    // You could implement analytics tracking here if needed
+    console.log(`Interaction with feature: ${id}`);
+  };
+  
   return (
     <section id="features" className="py-16 bg-background">
       <div className="container mx-auto px-4">

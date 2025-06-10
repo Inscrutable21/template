@@ -49,23 +49,20 @@ model WebVital {
 }
 
 model HeatmapEvent {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  x               Int
-  y               Int
-  path            String
-  eventType       String   // click, mousemove, scroll
-  userId          String?  @db.ObjectId
-  user            User?    @relation(fields: [userId], references: [id])
-  userAgent       String?
-  elementInfo     String?  // JSON string with element details
-  scrollPercentage Int?    // Scroll percentage (0-100)
-  milestone       String?  // Scroll milestone (25%, 50%, 75%, 100%)
-  visibleSections String?  // Comma-separated list of visible sections
-  timeOnPage      Int?     // Time spent on page in seconds
-  timestamp       DateTime @default(now())
-
-  // Add indexes for faster queries
-  @@index([path, eventType])
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId           String?   @db.ObjectId
+  user             User?     @relation(fields: [userId], references: [id])
+  path             String
+  eventType        String    // 'click' or 'scroll'
+  x                Int?      // For click events
+  y                Int?      // For click events
+  elementInfo      String?   // For click events
+  scrollPercentage Int?      // For scroll events
+  visibleSections  String?   // Comma-separated list of visible section IDs
+  timestamp        DateTime  @default(now())
+  
   @@index([userId])
+  @@index([path])
+  @@index([eventType])
 }
 

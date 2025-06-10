@@ -11,9 +11,9 @@ export async function GET(request) {
     // Build filter conditions
     const filter = {};
     if (userId) {
-      filter.userId = userId;
+      filter.user = { id: userId };
     } else if (anonymous === 'true') {
-      filter.userId = null;
+      filter.user = null;
     }
     
     console.log('Applying filter:', filter);
@@ -289,6 +289,7 @@ export async function GET(request) {
     );
   }
 }
+
 
 
 

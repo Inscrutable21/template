@@ -4,14 +4,14 @@ import { usePersonalization } from '@/hooks/usePersonalization';
 import { useState, useEffect } from 'react';
 
 export default function AdaptiveLayout({ children }) {
-  const { recommendations } = usePersonalization();
-  const [layoutClass, setLayoutClass] = useState('');
+  const { recommendations, isLoading } = usePersonalization();
+  const [layoutClass, setLayoutClass] = useState('max-w-6xl mx-auto px-5 space-y-6');
   
   useEffect(() => {
-    if (recommendations?.layoutPreferences) {
+    if (!isLoading && recommendations?.layoutPreferences) {
       const { contentDensity } = recommendations.layoutPreferences;
       
-      // Apply different layout classes based on user preferences
+      // Apply different layout classes based on ChatGPT recommendations
       switch (contentDensity) {
         case 'high':
           setLayoutClass('max-w-7xl mx-auto px-4 space-y-4');
@@ -23,7 +23,7 @@ export default function AdaptiveLayout({ children }) {
           setLayoutClass('max-w-6xl mx-auto px-5 space-y-6');
       }
     }
-  }, [recommendations]);
+  }, [recommendations, isLoading]);
   
   return (
     <div className={layoutClass}>

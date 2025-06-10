@@ -6,22 +6,28 @@ export async function POST(request) {
   try {
     const data = await request.json();
     console.log('Received heatmap event:', data);
-    const headersList = headers();
-    const userAgent = headersList.get('user-agent') || '';
+    const headersList = await headers();
     
     // Extract data from request
     const { x, y, path, eventType, userId } = data;
     
-    // Create base data object
+    // Create base data object with only fields defined in the schema
     const eventData = {
-      x,
-      y,
       path,
       eventType,
-      userId,
-      userAgent,
       timestamp: new Date()
     };
+    
+    // Only add x and y if they are defined (for click events)
+    if (x !== undefined) eventData.x = x;
+    if (y !== undefined) eventData.y = y;
+    
+    // Add user relation if userId exists
+    if (userId) {
+      eventData.user = {
+        connect: { id: userId }
+      };
+    }
     
     // Add element info if it exists
     if (data.elementInfo) {
@@ -36,16 +42,6 @@ export async function POST(request) {
     // Add visible sections if they exist
     if (data.visibleSections) {
       eventData.visibleSections = data.visibleSections;
-    }
-
-    // Add time on page if it exists
-    if (data.timeOnPage) {
-      eventData.timeOnPage = data.timeOnPage;
-    }
-
-    // Add milestone if it exists
-    if (data.milestone) {
-      eventData.milestone = data.milestone;
     }
     
     console.log('Saving heatmap event:', eventData);
@@ -65,5 +61,11 @@ export async function POST(request) {
     );
   }
 }
+
+
+
+
+
+
 
 

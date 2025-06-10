@@ -1,9 +1,11 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/hooks/useAuth";
+import { PersonalizationProvider } from "@/hooks/usePersonalization";
 import { WebVitals } from "@/components/analytics/WebVitals";
-import HeatmapTracker from "@/components/analytics/HeatmapTracker";
+import { HeatmapTracker } from "@/components/analytics/HeatmapTracker";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
+import PersonalizedUI from "@/components/PersonalizedUI";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,13 +31,16 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="flex flex-col min-h-screen">
+      <body>
         <AuthProvider>
-          <WebVitals />
-          <HeatmapTracker />
-          <ConditionalLayout>
-            {children}
-          </ConditionalLayout>
+          <PersonalizationProvider>
+            <WebVitals />
+            <HeatmapTracker />
+            <PersonalizedUI />
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
+          </PersonalizationProvider>
         </AuthProvider>
       </body>
     </html>

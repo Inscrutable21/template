@@ -49,18 +49,26 @@ export default function Footer() {
     
     recommendations.topSections.forEach((section, index) => {
       // Check if this interaction was with a footer link
-      footerLinks.forEach(category => {
-        category.links.forEach(link => {
-          // Check if the link path matches the interaction
-          const linkPath = link.href.split('#')[0] || '/';
-          const sectionPath = section.path.split('#')[0] || '/';
-          
-          if (linkPath === sectionPath || 
-              section.text?.toLowerCase().includes(link.name.toLowerCase())) {
-            interactionMap.set(link.name, 10 - index); // Higher priority for more interactions
-          }
+      if (section) {
+        footerLinks.forEach(category => {
+          category.links.forEach(link => {
+            // Check if the link matches the section identifier or path
+            const linkPath = link.href.split('#')[0] || '/';
+            
+            // Handle different section structures
+            const sectionIdentifier = section.identifier || '';
+            const sectionPath = section.path ? section.path.split('#')[0] || '/' : '/';
+            const sectionText = section.text || '';
+            
+            if (linkPath === sectionPath || 
+                link.href.includes(sectionIdentifier) ||
+                link.name.toLowerCase().includes(sectionIdentifier.toLowerCase()) ||
+                sectionText.toLowerCase().includes(link.name.toLowerCase())) {
+              interactionMap.set(link.name, 10 - index); // Higher priority for more interactions
+            }
+          });
         });
-      });
+      }
     });
     
     // Reorder links within each category based on interactions

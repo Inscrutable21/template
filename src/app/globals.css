@@ -1,13 +1,188 @@
 @import "tailwindcss";
 
 :root {
+  /* Base variables that can be customized by PersonalizedUI */
+  --primary-color: hsl(220, 70%, 50%);
+  --secondary-color: hsl(260, 70%, 60%);
+  --base-font-size: 1rem;
+  --content-spacing: 1rem;
+  
+  /* Other variables */
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  
+  /* Fix for navbar */
   --background: #ffffff;
-  --foreground: #171717;
-  --container-padding-mobile: 1rem;
-  --container-padding-tablet: 1.5rem;
-  --container-padding-desktop: 2rem;
-  --header-height-mobile: 4rem;
-  --header-height-desktop: 5rem;
+  --foreground: #000000;
+}
+
+/* Theme variations */
+.theme-vibrant {
+  --primary-color: hsl(230, 100%, 50%);
+  --secondary-color: hsl(280, 100%, 60%);
+  --background-color: hsl(240, 100%, 99%);
+  --foreground-color: hsl(240, 80%, 10%);
+}
+
+.theme-subtle {
+  --primary-color: hsl(210, 30%, 50%);
+  --secondary-color: hsl(180, 30%, 60%);
+  --background-color: hsl(210, 20%, 98%);
+  --foreground-color: hsl(210, 30%, 20%);
+}
+
+.theme-professional {
+  --primary-color: hsl(210, 50%, 40%);
+  --secondary-color: hsl(150, 40%, 40%);
+  --background-color: hsl(0, 0%, 100%);
+  --foreground-color: hsl(210, 50%, 10%);
+}
+
+/* Font size variations */
+.font-size-small {
+  font-size: var(--base-font-size, 0.875rem);
+}
+
+.font-size-medium {
+  font-size: var(--base-font-size, 1rem);
+}
+
+.font-size-large {
+  font-size: var(--base-font-size, 1.125rem);
+}
+
+/* Spacing variations */
+.spacing-compact {
+  --content-spacing: 0.75rem;
+}
+
+.spacing-balanced {
+  --content-spacing: 1rem;
+}
+
+.spacing-spacious {
+  --content-spacing: 1.5rem;
+}
+
+/* Apply spacing to elements */
+.home-page > * {
+  margin-bottom: var(--content-spacing, 1rem);
+}
+
+/* Section emphasis variations */
+.section-emphasis {
+  border-left: 4px solid var(--primary-color);
+  padding-left: 1rem;
+  background-color: rgba(var(--primary-rgb, 0, 0, 255), 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+.section-deemphasis {
+  opacity: 0.85;
+  filter: saturate(0.9);
+}
+
+/* Featured content */
+.featured-content {
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-content::before {
+  content: "Featured";
+  position: absolute;
+  top: 1rem;
+  right: -2rem;
+  background: var(--primary-color, #3b82f6);
+  color: white;
+  padding: 0.25rem 2rem;
+  transform: rotate(45deg);
+  font-size: 0.75rem;
+  font-weight: bold;
+  z-index: 10;
+}
+
+/* Call to action emphasis */
+.cta-emphasis-strong button, 
+.cta-emphasis-strong .btn-primary {
+  transform: scale(1.1);
+  font-weight: bold;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  animation: pulse 2s infinite;
+}
+
+.cta-emphasis-moderate button, 
+.cta-emphasis-moderate .btn-primary {
+  transform: scale(1.05);
+  font-weight: bold;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--primary-rgb, 59, 130, 246), 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(var(--primary-rgb, 59, 130, 246), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--primary-rgb, 59, 130, 246), 0);
+  }
+}
+
+/* Content grouping styles */
+.content-group-categorical section {
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.content-group-chronological section {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.content-group-chronological section::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--primary-color, #3b82f6);
+}
+
+.content-group-relevance section {
+  transition: all 0.3s ease;
+}
+
+.content-group-relevance section[data-priority="high"] {
+  transform: scale(1.02);
+  z-index: 2;
+}
+
+.content-group-relevance section[data-priority="low"] {
+  opacity: 0.9;
+}
+
+/* Navigation styles */
+.nav-prominent {
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.nav-standard {
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+.nav-minimal {
+  padding: 0.5rem;
+  font-size: 0.9rem;
 }
 
 @theme inline {
@@ -159,5 +334,27 @@ button {
   input, select, textarea {
     font-size: 16px;
   }
+}
+
+/* Remove any unwanted red borders or backgrounds */
+nav {
+  border-top: none !important;
+  border-bottom: 1px solid rgba(var(--foreground-rgb), 0.1);
+}
+
+/* Fix for dashboard and settings buttons */
+.dashboard-button, 
+.settings-button {
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid rgba(var(--foreground-rgb), 0.2);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.dashboard-button:hover, 
+.settings-button:hover {
+  background-color: rgba(var(--foreground-rgb), 0.05);
 }
 

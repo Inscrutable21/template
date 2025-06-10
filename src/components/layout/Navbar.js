@@ -62,7 +62,7 @@ export default function Navbar() {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
-      scrolled ? 'bg-background/95 backdrop-blur-sm shadow-sm' : 'bg-transparent'
+      scrolled ? 'bg-background/95 backdrop-blur-sm shadow-sm' : 'bg-background/80 backdrop-blur-sm'
     }`}>
       <div className="container mx-auto">
         <div className="flex justify-between items-center h-16 md:h-20">

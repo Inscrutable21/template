@@ -9,15 +9,24 @@ export async function POST(request) {
     const userAgent = headersList.get('user-agent') || '';
     const ipAddress = headersList.get('x-forwarded-for') || '';
     
+    // Create data object
+    const pageViewData = {
+      path,
+      userAgent,
+      ipAddress,
+      timestamp: new Date()
+    };
+    
+    // Add user relation if userId exists
+    if (userId) {
+      pageViewData.user = {
+        connect: { id: userId }
+      };
+    }
+    
     // Store in database
     await prisma.pageView.create({
-      data: {
-        path,
-        userId,
-        userAgent,
-        ipAddress,
-        timestamp: new Date()
-      }
+      data: pageViewData
     });
     
     return NextResponse.json({ success: true }, { status: 200 });
@@ -29,3 +38,4 @@ export async function POST(request) {
     );
   }
 }
+

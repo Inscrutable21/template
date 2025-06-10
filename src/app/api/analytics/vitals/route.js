@@ -7,18 +7,26 @@ export async function POST(request) {
     const { name, value, path, userId } = await request.json();
     const headersList = await headers();
     const userAgent = headersList.get('user-agent') || '';
-    const ip = headersList.get('x-forwarded-for') || '';
+    
+    // Create data object
+    const vitalData = {
+      name,
+      value,
+      path,
+      userAgent,
+      timestamp: new Date()
+    };
+    
+    // Add user relation if userId exists
+    if (userId) {
+      vitalData.user = {
+        connect: { id: userId }
+      };
+    }
     
     // Store in database
     await prisma.webVital.create({
-      data: {
-        name,
-        value,
-        path,
-        userId,
-        userAgent,
-        timestamp: new Date()
-      }
+      data: vitalData
     });
     
     return NextResponse.json({ success: true }, { status: 200 });
